@@ -1,4 +1,4 @@
-package com.stocat.backend_piano;
+package com.backend_piano;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
