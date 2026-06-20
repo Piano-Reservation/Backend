@@ -1,4 +1,4 @@
-package com.backend_piano.global.entity;
+package com.backend_piano.global.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
