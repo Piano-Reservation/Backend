@@ -1,5 +1,6 @@
 package com.backend_piano.auth.service;
 
+import com.backend_piano.student.exception.StudentErrorCode;
 import com.backend_piano.student.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
@@ -19,6 +20,6 @@ public class StudentDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(@NonNull String studentNumber) throws UsernameNotFoundException {
         return studentRepository.findByStudentNumber(studentNumber)
                 .map(StudentDetails::new)
-                .orElseThrow(() -> new UsernameNotFoundException(studentNumber));
+                .orElseThrow(() -> new UsernameNotFoundException(StudentErrorCode.STUDENT_NOT_FOUND.getMessage()));
     }
 }
