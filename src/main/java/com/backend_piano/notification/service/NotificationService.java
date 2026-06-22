@@ -28,7 +28,7 @@ public class NotificationService {
     }
 
     @Transactional
-    public void markAsRead(StudentDetails studentDetails, Long notificationId) {
+    public void updateReadStatus(StudentDetails studentDetails, Long notificationId, boolean isRead) {
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new ApiException(NotificationErrorCode.NOTIFICATION_NOT_FOUND));
 
@@ -36,11 +36,15 @@ public class NotificationService {
             throw new ApiException(NotificationErrorCode.NOTIFICATION_ACCESS_DENIED);
         }
 
-        notification.markAsRead();
+        if (isRead) {
+            notification.markAsRead();
+        }
     }
 
     @Transactional
-    public void markAllAsRead(StudentDetails studentDetails) {
-        notificationRepository.markAllAsRead(studentDetails.getStudent());
+    public void updateAllReadStatus(StudentDetails studentDetails, boolean isRead) {
+        if (isRead) {
+            notificationRepository.markAllAsRead(studentDetails.getStudent());
+        }
     }
 }
