@@ -65,6 +65,10 @@ public class Student extends BaseEntity implements Serializable {
     @Column(nullable = false, length = 20)
     private StudentStatus status;
 
+    public void changePassword(String encodedPassword) {
+        this.password = encodedPassword;
+    }
+
     public static Student create(
             String studentNumber,
             String name,
