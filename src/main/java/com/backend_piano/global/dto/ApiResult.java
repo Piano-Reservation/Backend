@@ -10,18 +10,18 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ApiResponse<T> {
+public class ApiResult<T> {
     private int code;
 
     private String message;
 
     private T data;
 
-    public static <T> ApiResponse<T> ok(T data) {
-        return new ApiResponse<>(0, "성공", data);
+    public static <T> ApiResult<T> ok(T data) {
+        return new ApiResult<>(0, "성공", data);
     }
 
-    public static <T> ApiResponse<T> fail(int code, String message) {
-        return new ApiResponse<>(code, message, null);
+    public static <T> ApiResult<T> fail(int code, String message) {
+        return new ApiResult<>(code, message, null);
     }
 }

@@ -1,7 +1,7 @@
 package com.backend_piano.global.config;
 
-import com.backend_piano.global.dto.ApiResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.backend_piano.global.dto.ApiResult;
+import tools.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,7 +34,8 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .ignoringRequestMatchers(PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.POST, "/api/auth")))
+                        .ignoringRequestMatchers(PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.POST, "/api/auth"))
+                        .ignoringRequestMatchers("/api/**")) // TODO: 운영환경에서는 제거, swagger 테스트를 위해 /api/** CSRF 검증 제외
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session
@@ -43,6 +44,7 @@ public class SecurityConfig {
                         .securityContextRepository(securityContextRepository))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/auth").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated())
                 .logout(logout -> logout
                         .logoutRequestMatcher(PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.DELETE, "/api/auth/session"))
@@ -52,7 +54,7 @@ public class SecurityConfig {
                                 res.setStatus(HttpServletResponse.SC_OK);
                                 res.setContentType(MediaType.APPLICATION_JSON_VALUE);
                                 res.setCharacterEncoding("UTF-8");
-                                objectMapper.writeValue(res.getWriter(), ApiResponse.ok(null));
+                                objectMapper.writeValue(res.getWriter(), ApiResult.ok(null));
                         }));
 
         return http.build();
