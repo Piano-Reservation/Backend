@@ -10,6 +10,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -25,7 +27,11 @@ import lombok.NoArgsConstructor;
 )
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Student extends BaseEntity {
+public class Student extends BaseEntity implements Serializable {
+
+    // 세션 직렬화 시 클래스 버전 식별자. 변경하면 기존 세션 역직렬화가 깨지므로 하위 호환 변경에만 유지.
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,7 +68,7 @@ public class Student extends BaseEntity {
     public static Student create(
             String studentNumber,
             String name,
-            String password,
+            String encodedPassword,
             LocalDate birthDate,
             Grade grade,
             PracticeCourse practiceCourse
@@ -70,7 +76,7 @@ public class Student extends BaseEntity {
         Student student = new Student();
         student.studentNumber = studentNumber;
         student.name = name;
-        student.password = password;
+        student.password = encodedPassword;
         student.birthDate = birthDate;
         student.grade = grade;
         student.practiceCourse = practiceCourse;
