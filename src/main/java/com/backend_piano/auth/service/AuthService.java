@@ -21,7 +21,7 @@ public class AuthService {
     private final SessionAuthenticationStrategy sessionAuthenticationStrategy;
     private final SecurityContextRepository securityContextRepository;
 
-    public void login(LoginRequest request, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
+    public Void login(LoginRequest request, HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
         UsernamePasswordAuthenticationToken token =
                 UsernamePasswordAuthenticationToken.unauthenticated(request.studentNumber(), request.password());
         Authentication authentication = authenticationManager.authenticate(token);

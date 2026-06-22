@@ -2,11 +2,11 @@ package com.backend_piano.auth.controller;
 
 import com.backend_piano.auth.dto.LoginRequest;
 import com.backend_piano.auth.service.AuthService;
+import com.backend_piano.global.dto.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,11 +20,10 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping
-    public ResponseEntity<Void> login(
+    public ApiResponse<Void> login(
             @RequestBody @Valid LoginRequest request,
             HttpServletRequest servletRequest,
             HttpServletResponse servletResponse) {
-        authService.login(request, servletRequest, servletResponse);
-        return ResponseEntity.ok().build();
+        return ApiResponse.ok(authService.login(request, servletRequest, servletResponse));
     }
 }

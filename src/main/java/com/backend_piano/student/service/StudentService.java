@@ -22,7 +22,7 @@ public class StudentService {
     }
 
     @Transactional
-    public void changePassword(StudentDetails studentDetails, PasswordChangeRequest request) {
+    public Void changePassword(StudentDetails studentDetails, PasswordChangeRequest request) {
         var student = studentDetails.getStudent();
 
         if (!passwordEncoder.matches(request.currentPassword(), student.getPassword())) {
