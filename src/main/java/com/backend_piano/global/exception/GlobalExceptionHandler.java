@@ -1,7 +1,6 @@
 package com.backend_piano.global.exception;
 
 import com.backend_piano.global.dto.ApiResponse;
-import com.backend_piano.global.exception.BaseErrorCode;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
