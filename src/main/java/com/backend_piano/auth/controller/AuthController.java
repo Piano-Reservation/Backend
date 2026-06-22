@@ -2,7 +2,7 @@ package com.backend_piano.auth.controller;
 
 import com.backend_piano.auth.dto.LoginRequest;
 import com.backend_piano.auth.service.AuthService;
-import com.backend_piano.global.dto.ApiResponse;
+import com.backend_piano.global.dto.ApiResult;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -20,10 +20,10 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping
-    public ApiResponse<Void> login(
+    public ApiResult<Void> login(
             @RequestBody @Valid LoginRequest request,
             HttpServletRequest servletRequest,
             HttpServletResponse servletResponse) {
-        return ApiResponse.ok(authService.login(request, servletRequest, servletResponse));
+        return ApiResult.ok(authService.login(request, servletRequest, servletResponse));
     }
 }

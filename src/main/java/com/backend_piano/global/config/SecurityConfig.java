@@ -1,6 +1,6 @@
 package com.backend_piano.global.config;
 
-import com.backend_piano.global.dto.ApiResponse;
+import com.backend_piano.global.dto.ApiResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
@@ -52,7 +52,7 @@ public class SecurityConfig {
                                 res.setStatus(HttpServletResponse.SC_OK);
                                 res.setContentType(MediaType.APPLICATION_JSON_VALUE);
                                 res.setCharacterEncoding("UTF-8");
-                                objectMapper.writeValue(res.getWriter(), ApiResponse.ok(null));
+                                objectMapper.writeValue(res.getWriter(), ApiResult.ok(null));
                         }));
 
         return http.build();
