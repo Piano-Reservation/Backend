@@ -1,7 +1,10 @@
 package com.backend_piano.notification.service;
 
 import com.backend_piano.auth.service.StudentDetails;
+import com.backend_piano.global.exception.ApiException;
 import com.backend_piano.notification.dto.NotificationResponse;
+import com.backend_piano.notification.exception.NotificationErrorCode;
+import com.backend_piano.notification.model.Notification;
 import com.backend_piano.notification.repository.NotificationRepository;
 import com.backend_piano.student.model.Student;
 import java.util.List;
@@ -22,5 +25,22 @@ public class NotificationService {
                 .stream()
                 .map(NotificationResponse::from)
                 .toList();
+    }
+
+    @Transactional
+    public void markAsRead(StudentDetails studentDetails, Long notificationId) {
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new ApiException(NotificationErrorCode.NOTIFICATION_NOT_FOUND));
+
+        if (!notification.getStudent().getId().equals(studentDetails.getStudent().getId())) {
+            throw new ApiException(NotificationErrorCode.NOTIFICATION_ACCESS_DENIED);
+        }
+
+        notification.markAsRead();
+    }
+
+    @Transactional
+    public void markAllAsRead(StudentDetails studentDetails) {
+        notificationRepository.markAllAsRead(studentDetails.getStudent());
     }
 }
