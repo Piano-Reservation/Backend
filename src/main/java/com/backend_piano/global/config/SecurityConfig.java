@@ -1,8 +1,11 @@
 package com.backend_piano.global.config;
 
+import com.backend_piano.global.dto.ApiResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,7 +29,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
-                                           SecurityContextRepository securityContextRepository) throws Exception {
+                                           SecurityContextRepository securityContextRepository,
+                                           ObjectMapper objectMapper) throws Exception {
         http
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
@@ -44,8 +48,12 @@ public class SecurityConfig {
                         .logoutRequestMatcher(PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.DELETE, "/api/auth/session"))
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
-                        .logoutSuccessHandler((req, res, auth) ->
-                                res.setStatus(HttpServletResponse.SC_OK)));
+                        .logoutSuccessHandler((req, res, auth) -> {
+                                res.setStatus(HttpServletResponse.SC_OK);
+                                res.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                                res.setCharacterEncoding("UTF-8");
+                                objectMapper.writeValue(res.getWriter(), ApiResponse.ok(null));
+                        }));
 
         return http.build();
     }
