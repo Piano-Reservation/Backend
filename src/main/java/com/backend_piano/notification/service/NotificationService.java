@@ -5,6 +5,7 @@ import com.backend_piano.global.exception.ApiException;
 import com.backend_piano.notification.dto.NotificationResponse;
 import com.backend_piano.notification.exception.NotificationErrorCode;
 import com.backend_piano.notification.model.Notification;
+import com.backend_piano.notification.model.NotificationType;
 import com.backend_piano.notification.repository.NotificationRepository;
 import com.backend_piano.student.model.Student;
 import lombok.RequiredArgsConstructor;
@@ -47,5 +48,10 @@ public class NotificationService {
         if (isRead) {
             notificationRepository.markAllAsRead(studentDetails.getStudent());
         }
+    }
+
+    @Transactional
+    public void save(Student student, NotificationType type, String message) {
+        notificationRepository.save(Notification.create(student, type, message));
     }
 }
