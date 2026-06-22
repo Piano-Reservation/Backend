@@ -3,6 +3,7 @@ package com.backend_piano.student.service;
 import com.backend_piano.auth.service.StudentDetails;
 import com.backend_piano.student.dto.PasswordChangeRequest;
 import com.backend_piano.student.dto.StudentResponse;
+import com.backend_piano.student.model.Student;
 import com.backend_piano.student.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import com.backend_piano.global.exception.ApiException;
@@ -24,14 +25,14 @@ public class StudentService {
 
     @Transactional
     public Void changePassword(StudentDetails studentDetails, PasswordChangeRequest request) {
-        var student = studentDetails.getStudent();
+        Student student = studentRepository.findById(studentDetails.getStudent().getId())
+                .orElseThrow(() -> new ApiException(StudentErrorCode.STUDENT_NOT_FOUND));
 
         if (!passwordEncoder.matches(request.currentPassword(), student.getPassword())) {
             throw new ApiException(StudentErrorCode.INVALID_CURRENT_PASSWORD);
         }
 
         student.changePassword(passwordEncoder.encode(request.newPassword()));
-        studentRepository.save(student);
         return null;
     }
 }
