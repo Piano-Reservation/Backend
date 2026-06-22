@@ -51,7 +51,8 @@ public class NotificationService {
     }
 
     @Transactional
-    public void save(Student student, NotificationType type, String message) {
-        notificationRepository.save(Notification.create(student, type, message));
+    public NotificationResponse save(Student student, NotificationType type, String message) {
+        return NotificationResponse.from(
+                notificationRepository.save(Notification.create(student, type, message)));
     }
 }
