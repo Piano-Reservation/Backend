@@ -19,7 +19,7 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/login")
+    @PostMapping
     public ResponseEntity<Void> login(
             @RequestBody @Valid LoginRequest request,
             HttpServletRequest servletRequest,
