@@ -7,8 +7,10 @@ import com.backend_piano.notification.exception.NotificationErrorCode;
 import com.backend_piano.notification.model.Notification;
 import com.backend_piano.notification.repository.NotificationRepository;
 import com.backend_piano.student.model.Student;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,12 +21,11 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
 
     @Transactional(readOnly = true)
-    public List<NotificationResponse> getMyNotifications(StudentDetails studentDetails) {
+    public Page<NotificationResponse> getMyNotifications(StudentDetails studentDetails, int page, int size) {
         Student student = studentDetails.getStudent();
-        return notificationRepository.findByStudentOrderByCreatedAtDesc(student)
-                .stream()
-                .map(NotificationResponse::from)
-                .toList();
+        PageRequest pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        return notificationRepository.findByStudent(student, pageable)
+                .map(NotificationResponse::from);
     }
 
     @Transactional

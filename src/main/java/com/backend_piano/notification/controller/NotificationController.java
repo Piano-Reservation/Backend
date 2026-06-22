@@ -4,13 +4,14 @@ import com.backend_piano.auth.service.StudentDetails;
 import com.backend_piano.global.dto.ApiResult;
 import com.backend_piano.notification.dto.NotificationResponse;
 import com.backend_piano.notification.dto.NotificationUpdateRequest;
+import org.springframework.web.bind.annotation.RequestParam;
 import com.backend_piano.notification.service.NotificationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -27,12 +28,14 @@ public class NotificationController {
 
     private final NotificationService notificationService;
 
-    @Operation(summary = "내 알림 목록 조회", description = "최신순으로 정렬된 내 알림 목록을 반환합니다.")
+    @Operation(summary = "내 알림 목록 조회", description = "최신순으로 정렬된 내 알림 목록을 페이지 단위로 반환합니다.")
     @ApiResponse(responseCode = "401", description = "미인증")
     @GetMapping
-    public ApiResult<List<NotificationResponse>> getMyNotifications(
-            @AuthenticationPrincipal StudentDetails studentDetails) {
-        return ApiResult.ok(notificationService.getMyNotifications(studentDetails));
+    public ApiResult<Page<NotificationResponse>> getMyNotifications(
+            @AuthenticationPrincipal StudentDetails studentDetails,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        return ApiResult.ok(notificationService.getMyNotifications(studentDetails, page, size));
     }
 
     @Operation(summary = "알림 읽음 상태 변경")
