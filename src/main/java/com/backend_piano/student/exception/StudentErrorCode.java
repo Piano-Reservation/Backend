@@ -1,13 +1,15 @@
-package com.backend_piano.global.exception;
+package com.backend_piano.student.exception;
 
+import com.backend_piano.global.exception.BaseErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @RequiredArgsConstructor
-public enum ErrorCode implements BaseErrorCode {
+public enum StudentErrorCode implements BaseErrorCode {
 
-    // COMMON
-    SERVER_ERROR(9999, "서버 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
+    STUDENT_NOT_FOUND(2001, "학생을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
+    INVALID_CURRENT_PASSWORD(2002, "현재 비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
+
     ;
 
     private final int code;

@@ -39,7 +39,7 @@ public class GlobalExceptionHandler {
     public ApiResponse<Void> handleGlobalException(Exception ex, HttpServletResponse response) {
         log.error("Unhandled exception", ex);
 
-        BaseErrorCode e = ErrorCode.SERVER_ERROR;
+        BaseErrorCode e = CommonErrorCode.SERVER_ERROR;
         response.setStatus(e.getStatus().value());
 
         return ApiResponse.fail(e.getCode(), ex.getMessage());

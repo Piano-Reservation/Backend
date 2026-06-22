@@ -5,7 +5,8 @@ import com.backend_piano.student.dto.PasswordChangeRequest;
 import com.backend_piano.student.dto.StudentResponse;
 import com.backend_piano.student.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.BadCredentialsException;
+import com.backend_piano.global.exception.ApiException;
+import com.backend_piano.student.exception.StudentErrorCode;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,10 +27,11 @@ public class StudentService {
         var student = studentDetails.getStudent();
 
         if (!passwordEncoder.matches(request.currentPassword(), student.getPassword())) {
-            throw new BadCredentialsException("현재 비밀번호가 일치하지 않습니다.");
+            throw new ApiException(StudentErrorCode.INVALID_CURRENT_PASSWORD);
         }
 
         student.changePassword(passwordEncoder.encode(request.newPassword()));
         studentRepository.save(student);
+        return null;
     }
 }
