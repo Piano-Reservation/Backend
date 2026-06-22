@@ -41,6 +41,6 @@ public class GlobalExceptionHandler {
         BaseErrorCode e = CommonErrorCode.SERVER_ERROR;
         response.setStatus(e.getStatus().value());
 
-        return ApiResponse.fail(e.getCode(), ex.getMessage());
+        return ApiResponse.fail(e.getCode(), e.getMessage());
     }
 }
