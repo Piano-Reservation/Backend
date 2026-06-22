@@ -4,7 +4,7 @@ import com.backend_piano.global.dto.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -24,9 +24,13 @@ public class GlobalExceptionHandler {
     // 유효성 검증 실패
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ApiResponse<Void> handleValidationExceptions(MethodArgumentNotValidException ex, HttpServletResponse response) {
-        FieldError fieldError = ex.getBindingResult().getFieldErrors().getFirst();
-
-        String errorMessage = String.format("[%s 필드 에러] %s", fieldError.getField(), fieldError.getDefaultMessage());
+        String errorMessage = ex.getBindingResult().getFieldErrors().stream()
+                .findFirst()
+                .<String>map(fieldError -> String.format("[%s 필드 에러] %s", fieldError.getField(), fieldError.getDefaultMessage()))
+                .orElseGet(() -> ex.getBindingResult().getAllErrors().stream()
+                        .findFirst()
+                        .map(ObjectError::getDefaultMessage)
+                        .orElse("입력값이 올바르지 않습니다."));
 
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         return ApiResponse.fail(400, errorMessage);
