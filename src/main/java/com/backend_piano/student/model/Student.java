@@ -37,7 +37,7 @@ public class Student extends BaseEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 20)
+    @Column(nullable = false, unique = true, length = 9)
     private String studentNumber;
 
     @Column(nullable = false, length = 50)
