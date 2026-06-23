@@ -49,11 +49,7 @@ public class NotificationService {
     }
 
     @Transactional
-    public void updateAllReadStatus(StudentDetails studentDetails, boolean isRead) {
-        if (!isRead) {
-            throw new ApiException(NotificationErrorCode.CANNOT_MARK_AS_UNREAD);
-        }
-
+    public void markAllAsRead(StudentDetails studentDetails) {
         notificationRepository.markAllAsRead(studentDetails.getStudent());
     }
 

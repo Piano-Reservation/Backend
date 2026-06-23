@@ -69,13 +69,12 @@ public class NotificationController {
         return ApiResult.ok(null);
     }
 
-    @Operation(summary = "전체 알림 읽음 상태 변경")
+    @Operation(summary = "전체 알림 읽음 처리")
     @ApiResponse(responseCode = "401", description = "미인증")
-    @PatchMapping
-    public ApiResult<Void> updateAllReadStatus(
-            @AuthenticationPrincipal StudentDetails studentDetails,
-            @RequestBody NotificationUpdateRequest request) {
-        notificationService.updateAllReadStatus(studentDetails, request.isRead());
+    @PatchMapping("/all")
+    public ApiResult<Void> markAllAsRead(
+            @AuthenticationPrincipal StudentDetails studentDetails) {
+        notificationService.markAllAsRead(studentDetails);
         return ApiResult.ok(null);
     }
 }
