@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -53,8 +54,8 @@ public class NotificationService {
         notificationRepository.markAllAsRead(studentDetails.getStudent());
     }
 
-    @Transactional
-    public NotificationResponse save(Long studentId, NotificationType type, String message) {
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public NotificationResponse createFromEvent(Long studentId, NotificationType type, String message) {
         Student student = studentRepository.getReferenceById(studentId);
         return NotificationResponse.from(
                 notificationRepository.save(Notification.create(student, type, message)));
