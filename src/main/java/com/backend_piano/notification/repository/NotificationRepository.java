@@ -13,7 +13,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
     Page<Notification> findByStudent(Student student, Pageable pageable);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("UPDATE Notification n SET n.isRead = true WHERE n.student = :student AND n.isRead = false")
     int markAllAsRead(@Param("student") Student student);
 }
