@@ -31,6 +31,10 @@ public class NotificationService {
 
     @Transactional
     public void updateReadStatus(StudentDetails studentDetails, Long notificationId, boolean isRead) {
+        if (!isRead) {
+            throw new ApiException(NotificationErrorCode.CANNOT_MARK_AS_UNREAD);
+        }
+
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new ApiException(NotificationErrorCode.NOTIFICATION_NOT_FOUND));
 
@@ -38,16 +42,16 @@ public class NotificationService {
             throw new ApiException(NotificationErrorCode.NOTIFICATION_ACCESS_DENIED);
         }
 
-        if (isRead) {
-            notification.markAsRead();
-        }
+        notification.markAsRead();
     }
 
     @Transactional
     public void updateAllReadStatus(StudentDetails studentDetails, boolean isRead) {
-        if (isRead) {
-            notificationRepository.markAllAsRead(studentDetails.getStudent());
+        if (!isRead) {
+            throw new ApiException(NotificationErrorCode.CANNOT_MARK_AS_UNREAD);
         }
+
+        notificationRepository.markAllAsRead(studentDetails.getStudent());
     }
 
     @Transactional
