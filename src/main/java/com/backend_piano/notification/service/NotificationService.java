@@ -24,7 +24,8 @@ public class NotificationService {
     @Transactional(readOnly = true)
     public Page<NotificationResponse> getMyNotifications(StudentDetails studentDetails, int page, int size) {
         Student student = studentDetails.getStudent();
-        PageRequest pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        PageRequest pageable = PageRequest.of(page, size,
+                Sort.by(Sort.Direction.DESC, "createdAt").and(Sort.by(Sort.Direction.DESC, "id")));
         return notificationRepository.findByStudent(student, pageable)
                 .map(NotificationResponse::from);
     }
