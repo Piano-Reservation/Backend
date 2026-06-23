@@ -2,16 +2,13 @@ package com.backend_piano.notification.controller;
 
 import com.backend_piano.auth.service.StudentDetails;
 import com.backend_piano.global.dto.ApiResult;
-import com.backend_piano.global.event.NotificationEvent;
 import com.backend_piano.notification.model.NotificationType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,13 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 class NotificationTestController {
 
-    private final ApplicationEventPublisher eventPublisher;
+    private final NotificationTestService notificationTestService;
 
-    // SSE 실시간 알림 수신 테스트용 — 로그인한 사용자에게 알림 이벤트를 직접 발행한다.
-    // 테스트용이라서 controller 에서 바로 비지니스로직을 호출함 (레이어 위반함)
     @Operation(summary = "테스트 알림 발행", description = "로그인한 사용자에게 알림 이벤트를 직접 발행합니다. local 환경 전용.")
     @ApiResponse(responseCode = "401", description = "미인증")
-    @Transactional
     @PostMapping
     public ApiResult<Void> publish(
             @AuthenticationPrincipal StudentDetails studentDetails,
@@ -49,8 +43,7 @@ class NotificationTestController {
                     """)
             @RequestParam NotificationType type,
             @RequestParam(defaultValue = "테스트 알림입니다.") String message) {
-        eventPublisher.publishEvent(
-                NotificationEvent.of(studentDetails.getStudent(), type, message));
+        notificationTestService.publishEvent(studentDetails.getStudent(), type, message);
         return ApiResult.ok(null);
     }
 }
