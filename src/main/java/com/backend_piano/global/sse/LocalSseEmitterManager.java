@@ -40,7 +40,8 @@ public class LocalSseEmitterManager implements SseEmitterManager {
 
         try {
             emitter.send(SseEmitter.event().name(eventName).data(data));
-        } catch (IOException e) {
+        } catch (Exception e) {
+            log.warn("SSE 전송 실패 studentId={}", studentId, e);
             emitters.remove(studentId);
         }
     }
