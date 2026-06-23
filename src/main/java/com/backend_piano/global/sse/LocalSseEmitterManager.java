@@ -18,16 +18,19 @@ public class LocalSseEmitterManager implements SseEmitterManager {
     public SseEmitter subscribe(Long studentId) {
         SseEmitter emitter = new SseEmitter(SSE_TIMEOUT);
 
-        emitter.onCompletion(() -> emitters.remove(studentId));
-        emitter.onTimeout(() -> emitters.remove(studentId));
-        emitter.onError(e -> emitters.remove(studentId));
+        emitter.onCompletion(() -> emitters.remove(studentId, emitter));
+        emitter.onTimeout(() -> emitters.remove(studentId, emitter));
+        emitter.onError(e -> emitters.remove(studentId, emitter));
 
-        emitters.put(studentId, emitter);
+        SseEmitter previous = emitters.put(studentId, emitter);
+        if (previous != null) {
+            previous.complete();
+        }
 
         try {
             emitter.send(SseEmitter.event().name(SseEventName.CONNECT).data("connected"));
         } catch (IOException e) {
-            emitters.remove(studentId);
+            emitters.remove(studentId, emitter);
         }
 
         return emitter;
@@ -42,7 +45,7 @@ public class LocalSseEmitterManager implements SseEmitterManager {
             emitter.send(SseEmitter.event().name(eventName).data(data));
         } catch (Exception e) {
             log.warn("SSE 전송 실패 studentId={}", studentId, e);
-            emitters.remove(studentId);
+            emitters.remove(studentId, emitter);
         }
     }
 }
