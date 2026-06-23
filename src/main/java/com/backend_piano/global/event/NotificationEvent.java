@@ -4,11 +4,11 @@ import com.backend_piano.notification.model.NotificationType;
 import com.backend_piano.student.model.Student;
 
 public record NotificationEvent(
-        Student student,
+        Long studentId,
         NotificationType type,
         String message
 ) {
     public static NotificationEvent of(Student student, NotificationType type, String message) {
-        return new NotificationEvent(student, type, message);
+        return new NotificationEvent(student.getId(), type, message);
     }
 }

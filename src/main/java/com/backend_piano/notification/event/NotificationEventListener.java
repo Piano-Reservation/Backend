@@ -20,7 +20,7 @@ public class NotificationEventListener {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handle(NotificationEvent event) {
         NotificationResponse response = notificationService.save(
-                event.student(), event.type(), event.message());
-        sseEmitterManager.send(event.student().getId(), SseEventName.NOTIFICATION, response);
+                event.studentId(), event.type(), event.message());
+        sseEmitterManager.send(event.studentId(), SseEventName.NOTIFICATION, response);
     }
 }
