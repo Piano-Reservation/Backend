@@ -2,6 +2,7 @@ package com.backend_piano.global.exception;
 
 import com.backend_piano.global.dto.ApiResult;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.ObjectError;
@@ -21,7 +22,18 @@ public class GlobalExceptionHandler {
         return ApiResult.fail(e.getCode(), e.getMessage());
     }
 
-    // 유효성 검증 실패
+    // @RequestParam 제약 조건 위반 (@Validated + @Max, @Min 등)
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ApiResult<Void> handleConstraintViolation(ConstraintViolationException ex, HttpServletResponse response) {
+        String message = ex.getConstraintViolations().stream()
+                .findFirst()
+                .map(v -> v.getMessage())
+                .orElse("입력값이 올바르지 않습니다.");
+        response.setStatus(HttpStatus.BAD_REQUEST.value());
+        return ApiResult.fail(400, message);
+    }
+
+    // @RequestBody 유효성 검증 실패
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ApiResult<Void> handleValidationExceptions(MethodArgumentNotValidException ex, HttpServletResponse response) {
         String errorMessage = ex.getBindingResult().getFieldErrors().stream()
