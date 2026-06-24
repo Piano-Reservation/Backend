@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RestrictionRepository extends JpaRepository<Restriction, Long> {
 
-    Optional<Restriction> findByStudentIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
-            Long studentId, LocalDate now1, LocalDate now2);
+    Optional<Restriction> findFirstByStudentIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByEndDateDesc(
+            Long studentId, LocalDate startDate, LocalDate endDate);
 }
