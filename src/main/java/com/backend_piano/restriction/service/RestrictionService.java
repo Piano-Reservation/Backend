@@ -18,7 +18,8 @@ public class RestrictionService {
     public RestrictionResponse getCurrentRestriction(StudentDetails studentDetails) {
         LocalDate today = LocalDate.now();
         return restrictionRepository
-                .findCurrentByStudentId(studentDetails.getStudent().getId(), today)
+                .findFirstByStudentIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByEndDateDesc(
+                        studentDetails.getStudent().getId(), today, today)
                 .map(RestrictionResponse::from)
                 .orElse(RestrictionResponse.none());
     }
