@@ -15,7 +15,7 @@ public record RestrictionResponse(
     public static RestrictionResponse from(Restriction restriction) {
         long remaining = ChronoUnit.DAYS.between(LocalDate.now(), restriction.getEndDate());
         return new RestrictionResponse(
-                true,
+                remaining > 0,
                 restriction.getStartDate(),
                 restriction.getEndDate(),
                 restriction.getReason(),
