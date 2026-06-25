@@ -22,9 +22,10 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     List<Reservation> findByRoomAndReservationDateOrderByStartTimeAsc(Room room, LocalDate reservationDate);
 
-    boolean existsByRoomAndReservationDateAndStartTimeLessThanAndEndTimeGreaterThan(
+    boolean existsByRoomAndReservationDateAndStatusInAndStartTimeLessThanAndEndTimeGreaterThan(
             Room room,
             LocalDate reservationDate,
+            Collection<ReservationStatus> statuses,
             LocalTime endTime,
             LocalTime startTime
     );

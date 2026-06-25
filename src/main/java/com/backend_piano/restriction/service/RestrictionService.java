@@ -23,4 +23,13 @@ public class RestrictionService {
                 .map(RestrictionResponse::from)
                 .orElse(RestrictionResponse.none());
     }
+
+    @Transactional(readOnly = true)
+    public boolean hasCurrentRestriction(Long studentId) {
+        LocalDate today = LocalDate.now();
+        return restrictionRepository
+                .findFirstByStudentIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByEndDateDesc(
+                        studentId, today, today)
+                .isPresent();
+    }
 }
