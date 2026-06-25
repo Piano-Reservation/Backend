@@ -10,5 +10,7 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 
     List<Room> findByFloorAndActiveTrueOrderByCodeAsc(RoomFloor floor);
 
+    Optional<Room> findByIdAndActiveTrue(Long id);
+
     Optional<Room> findByCode(String code);
 }

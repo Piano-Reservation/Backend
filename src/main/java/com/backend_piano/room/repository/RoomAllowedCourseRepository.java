@@ -10,5 +10,7 @@ public interface RoomAllowedCourseRepository extends JpaRepository<RoomAllowedCo
 
     List<RoomAllowedCourse> findByRoom(Room room);
 
+    List<RoomAllowedCourse> findByRoomIdIn(List<Long> roomIds);
+
     boolean existsByRoomAndPracticeCourse(Room room, PracticeCourse practiceCourse);
 }
