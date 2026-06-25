@@ -5,9 +5,12 @@ import com.backend_piano.student.dto.PasswordChangeRequest;
 import com.backend_piano.student.dto.StudentResponse;
 import com.backend_piano.student.model.Student;
 import com.backend_piano.student.repository.StudentRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import com.backend_piano.global.exception.ApiException;
 import com.backend_piano.student.exception.StudentErrorCode;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +27,7 @@ public class StudentService {
     }
 
     @Transactional
-    public Void changePassword(StudentDetails studentDetails, PasswordChangeRequest request) {
+    public Void changePassword(StudentDetails studentDetails, PasswordChangeRequest request, HttpServletRequest servletRequest) {
         Student student = studentRepository.findById(studentDetails.getStudent().getId())
                 .orElseThrow(() -> new ApiException(StudentErrorCode.STUDENT_NOT_FOUND));
 
@@ -33,6 +36,13 @@ public class StudentService {
         }
 
         student.changePassword(passwordEncoder.encode(request.newPassword()));
+
+        HttpSession session = servletRequest.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        SecurityContextHolder.clearContext();
+
         return null;
     }
 }

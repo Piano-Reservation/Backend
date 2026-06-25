@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -42,7 +43,8 @@ public class StudentController {
     @PutMapping("/me/password")
     public ApiResult<Void> changePassword(
             @AuthenticationPrincipal StudentDetails studentDetails,
-            @RequestBody @Valid PasswordChangeRequest request) {
-        return ApiResult.ok(studentService.changePassword(studentDetails, request));
+            @RequestBody @Valid PasswordChangeRequest request,
+            HttpServletRequest servletRequest) {
+        return ApiResult.ok(studentService.changePassword(studentDetails, request, servletRequest));
     }
 }
