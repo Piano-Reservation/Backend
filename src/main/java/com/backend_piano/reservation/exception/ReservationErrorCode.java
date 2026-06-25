@@ -14,6 +14,10 @@ public enum ReservationErrorCode implements BaseErrorCode {
     RESERVATION_EXCEEDS_MAX_DURATION(6005, "1회 예약은 최대 2시간까지 가능합니다.", HttpStatus.BAD_REQUEST),
     RESERVATION_TIME_CONFLICT(6006, "해당 시간대에는 이미 예약이 있습니다.", HttpStatus.CONFLICT),
     RESERVATION_RESTRICTED(6007, "현재 이용 제한 상태로 예약할 수 없습니다.", HttpStatus.FORBIDDEN),
+    FIRST_FLOOR_DAILY_LIMIT_EXCEEDED(6008, "1층은 하루 최대 4시간까지 예약할 수 있습니다.", HttpStatus.BAD_REQUEST),
+    THIRD_FLOOR_DAILY_LIMIT_EXCEEDED(6009, "3층은 하루 최대 6시간까지 예약할 수 있습니다.", HttpStatus.BAD_REQUEST),
+    TOTAL_DAILY_LIMIT_EXCEEDED(6010, "하루 총 예약 가능 시간 10시간을 초과할 수 없습니다.", HttpStatus.BAD_REQUEST),
+    EVENING_ROOM_MAJOR_RESTRICTION(6011, "18시 이후 3층 예약은 지정된 전공실기 연습실만 예약할 수 있습니다.", HttpStatus.BAD_REQUEST),
 
     ;
 
