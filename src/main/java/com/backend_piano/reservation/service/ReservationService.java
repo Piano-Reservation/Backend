@@ -93,6 +93,20 @@ public class ReservationService {
         return ReservationResponse.from(reservation);
     }
 
+    public void cancelReservation(StudentDetails studentDetails, Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new ApiException(ReservationErrorCode.RESERVATION_NOT_FOUND));
+
+        if (!reservation.getStudent().getId().equals(studentDetails.getStudent().getId())) {
+            throw new ApiException(ReservationErrorCode.RESERVATION_ACCESS_DENIED);
+        }
+        if (reservation.getStatus() != ReservationStatus.RESERVED) {
+            throw new ApiException(ReservationErrorCode.RESERVATION_CANNOT_BE_CANCELLED);
+        }
+
+        reservation.cancel("USER_CANCELLED", java.time.LocalDateTime.now());
+    }
+
     private void validateRestrictedStudent(Long studentId) {
         if (restrictionService.hasCurrentRestriction(studentId)) {
             throw new ApiException(ReservationErrorCode.RESERVATION_RESTRICTED);

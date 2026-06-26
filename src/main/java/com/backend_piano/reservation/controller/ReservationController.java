@@ -16,8 +16,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -56,5 +58,19 @@ public class ReservationController {
             @AuthenticationPrincipal StudentDetails studentDetails,
             @RequestBody @Valid ReservationCreateRequest request) {
         return ApiResult.ok(reservationService.createReservation(studentDetails, request));
+    }
+
+    @Operation(summary = "연습실 예약 취소")
+    @ApiResponse(responseCode = "200", description = "취소 성공")
+    @ApiResponse(responseCode = "400", description = "취소 불가능한 상태")
+    @ApiResponse(responseCode = "401", description = "미인증")
+    @ApiResponse(responseCode = "403", description = "접근 권한 없음")
+    @ApiResponse(responseCode = "404", description = "예약 없음")
+    @DeleteMapping("/{reservationId}")
+    public ApiResult<Void> cancelReservation(
+            @AuthenticationPrincipal StudentDetails studentDetails,
+            @PathVariable Long reservationId) {
+        reservationService.cancelReservation(studentDetails, reservationId);
+        return ApiResult.ok(null);
     }
 }
