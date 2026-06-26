@@ -57,6 +57,8 @@ class ReservationServiceTest {
 
     private Clock clock;
     private ReservationService reservationService;
+    private ReservationCreateValidator reservationCreateValidator;
+    private ReservationCancelValidator reservationCancelValidator;
 
     @BeforeEach
     void setUp() {
@@ -64,11 +66,18 @@ class ReservationServiceTest {
                 Instant.parse("2026-06-26T01:00:00Z"),
                 ZoneId.of("Asia/Seoul")
         );
+        reservationCreateValidator = new ReservationCreateValidator(
+                reservationRepository,
+                roomAllowedCourseRepository,
+                restrictionService,
+                clock
+        );
+        reservationCancelValidator = new ReservationCancelValidator();
         reservationService = new ReservationService(
                 reservationRepository,
                 roomRepository,
-                roomAllowedCourseRepository,
-                restrictionService,
+                reservationCreateValidator,
+                reservationCancelValidator,
                 clock
         );
     }
