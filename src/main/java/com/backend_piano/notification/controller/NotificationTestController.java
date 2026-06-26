@@ -23,7 +23,15 @@ class NotificationTestController {
 
     private final NotificationTestService notificationTestService;
 
-    @Operation(summary = "테스트 알림 발행", description = "로그인한 사용자에게 알림 이벤트를 직접 발행합니다. local 환경 전용.")
+    @Operation(summary = "테스트 알림 발행", description = """
+                    로그인한 사용자에게 알림 이벤트를 직접 발행합니다. local 환경 전용.
+
+                    **실시간 알림 수신 순서**
+
+                    1. 로그인 (`POST /api/auth`)
+                    2. Swagger 탭을 하나 더 열어 `GET /api/notifications/subscribe` 호출 — 로딩 상태로 유지
+                    3. 이 API 호출 → 2번 탭의 SSE 연결로 알림이 실시간 전달됨
+                    """)
     @ApiResponse(responseCode = "401", description = "미인증")
     @PostMapping
     public ApiResult<Void> publish(
