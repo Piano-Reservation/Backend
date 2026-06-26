@@ -1,4 +1,4 @@
-# Backend Piano — 프론트엔드 실행 가이드
+# Backend Piano — 실행 가이드
 
 > **Docker만 있으면 됩니다.** Java, Gradle, MySQL을 별도로 설치할 필요 없습니다.
 
@@ -56,7 +56,7 @@ docker-compose up --build
 - 처음 실행 시 이미지 빌드와 DB 세팅으로 **5~10분** 정도 걸립니다.
 - 아래 로그가 뜨면 준비 완료입니다:
 
-```
+```text
 app  | Started BackendPianoApplication in X.XXX seconds
 ```
 
