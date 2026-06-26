@@ -94,7 +94,7 @@ public class ReservationCreateValidator {
 
     private void validateDailyReservationLimits(Student student, Room room, ReservationCreateRequest request) {
         List<Reservation> existingReservations = reservationRepository
-                .findByStudentAndReservationDateAndStatusInOrderByStartTimeAsc(
+                .findDailyReservationsByStudent(
                         student,
                         request.date(),
                         DAILY_LIMIT_STATUSES
@@ -122,8 +122,8 @@ public class ReservationCreateValidator {
             return;
         }
 
-        boolean allowed = roomAllowedCourseRepository.existsByRoomAndPracticeCourse(room, practiceCourse);
-        boolean unrestrictedRoom = roomAllowedCourseRepository.findByRoom(room).isEmpty();
+        boolean allowed = roomAllowedCourseRepository.isPracticeCourseAllowed(room, practiceCourse);
+        boolean unrestrictedRoom = roomAllowedCourseRepository.findAllowedCoursesByRoom(room).isEmpty();
         if (!allowed && !unrestrictedRoom) {
             throw new ApiException(ReservationErrorCode.EVENING_ROOM_MAJOR_RESTRICTION);
         }
@@ -136,12 +136,12 @@ public class ReservationCreateValidator {
             LocalTime endTime
     ) {
         boolean existsConflict = reservationRepository
-                .existsByRoomAndReservationDateAndStatusInAndStartTimeLessThanAndEndTimeGreaterThan(
+                .existsTimeConflict(
                         room,
                         reservationDate,
                         ACTIVE_STATUSES,
-                        endTime,
-                        startTime
+                        startTime,
+                        endTime
                 );
 
         if (existsConflict) {

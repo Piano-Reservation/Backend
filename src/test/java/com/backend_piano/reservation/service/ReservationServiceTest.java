@@ -96,10 +96,10 @@ class ReservationServiceTest {
 
         when(restrictionService.hasCurrentRestriction(student.getId())).thenReturn(false);
         when(roomRepository.findByIdAndActiveTrue(room.getId())).thenReturn(Optional.of(room));
-        when(reservationRepository.findByStudentAndReservationDateAndStatusInOrderByStartTimeAsc(
+        when(reservationRepository.findDailyReservationsByStudent(
                 eq(student), eq(request.date()), any())).thenReturn(List.of());
-        when(reservationRepository.existsByRoomAndReservationDateAndStatusInAndStartTimeLessThanAndEndTimeGreaterThan(
-                eq(room), eq(request.date()), any(), eq(request.endTime()), eq(request.startTime()))).thenReturn(false);
+        when(reservationRepository.existsTimeConflict(
+                eq(room), eq(request.date()), any(), eq(request.startTime()), eq(request.endTime()))).thenReturn(false);
         when(reservationRepository.save(any(Reservation.class))).thenAnswer(invocation -> {
             Reservation saved = invocation.getArgument(0);
             ReflectionTestUtils.setField(saved, "id", 100L);
@@ -157,7 +157,7 @@ class ReservationServiceTest {
 
         when(restrictionService.hasCurrentRestriction(student.getId())).thenReturn(false);
         when(roomRepository.findByIdAndActiveTrue(room.getId())).thenReturn(Optional.of(room));
-        when(reservationRepository.findByStudentAndReservationDateAndStatusInOrderByStartTimeAsc(
+        when(reservationRepository.findDailyReservationsByStudent(
                 eq(student), eq(request.date()), any())).thenReturn(List.of(existing1, existing2));
 
         assertThatThrownBy(() -> reservationService.createReservation(studentDetails, request))
@@ -180,10 +180,10 @@ class ReservationServiceTest {
 
         when(restrictionService.hasCurrentRestriction(student.getId())).thenReturn(false);
         when(roomRepository.findByIdAndActiveTrue(room.getId())).thenReturn(Optional.of(room));
-        when(reservationRepository.findByStudentAndReservationDateAndStatusInOrderByStartTimeAsc(
+        when(reservationRepository.findDailyReservationsByStudent(
                 eq(student), eq(request.date()), any())).thenReturn(List.of());
-        when(roomAllowedCourseRepository.existsByRoomAndPracticeCourse(room, student.getPracticeCourse())).thenReturn(false);
-        when(roomAllowedCourseRepository.findByRoom(room)).thenReturn(List.of(org.mockito.Mockito.mock(com.backend_piano.room.model.RoomAllowedCourse.class)));
+        when(roomAllowedCourseRepository.isPracticeCourseAllowed(room, student.getPracticeCourse())).thenReturn(false);
+        when(roomAllowedCourseRepository.findAllowedCoursesByRoom(room)).thenReturn(List.of(org.mockito.Mockito.mock(com.backend_piano.room.model.RoomAllowedCourse.class)));
 
         assertThatThrownBy(() -> reservationService.createReservation(studentDetails, request))
                 .isInstanceOf(ApiException.class)

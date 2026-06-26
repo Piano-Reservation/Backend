@@ -12,7 +12,6 @@ import com.backend_piano.room.model.Room;
 import com.backend_piano.room.repository.RoomRepository;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,34 +36,8 @@ public class ReservationQueryService {
         Room room = roomRepository.findByIdAndActiveTrue(roomId)
                 .orElseThrow(() -> new ApiException(RoomErrorCode.ROOM_NOT_FOUND));
 
-        List<Reservation> reservations = reservationRepository.findByRoomAndReservationDateOrderByStartTimeAsc(room, date);
-        List<ReservationAvailabilitySlotResponse> slots = new ArrayList<>();
-
-        for (int hour = FIRST_SLOT_HOUR; hour < LAST_SLOT_HOUR; hour++) {
-            LocalTime startTime = LocalTime.of(hour, 0);
-            LocalTime endTime = startTime.plusHours(1);
-            Reservation overlappedReservation = findOverlappedReservation(reservations, startTime, endTime);
-
-            if (overlappedReservation == null) {
-                slots.add(ReservationAvailabilitySlotResponse.of(
-                        startTime,
-                        endTime,
-                        AvailabilitySlotStatus.AVAILABLE,
-                        null
-                ));
-                continue;
-            }
-
-            boolean isMyReservation = overlappedReservation.getStudent().getId()
-                    .equals(studentDetails.getStudent().getId());
-
-            slots.add(ReservationAvailabilitySlotResponse.of(
-                    startTime,
-                    endTime,
-                    isMyReservation ? AvailabilitySlotStatus.RESERVED_BY_ME : AvailabilitySlotStatus.RESERVED,
-                    isMyReservation ? overlappedReservation.getId() : null
-            ));
-        }
+        List<Reservation> reservations = reservationRepository.findReservationsByRoomAndDate(room, date);
+        List<ReservationAvailabilitySlotResponse> slots = createAvailabilitySlots(reservations, studentDetails.getStudent().getId());
 
         return ReservationAvailabilityResponse.of(
                 room.getId(),
@@ -72,6 +45,52 @@ public class ReservationQueryService {
                 room.getFloor().level(),
                 date,
                 slots
+        );
+    }
+
+    private List<ReservationAvailabilitySlotResponse> createAvailabilitySlots(
+            List<Reservation> reservations,
+            Long studentId
+    ) {
+        return java.util.stream.IntStream.range(FIRST_SLOT_HOUR, LAST_SLOT_HOUR)
+                .mapToObj(hour -> createAvailabilitySlot(reservations, studentId, hour))
+                .toList();
+    }
+
+    private ReservationAvailabilitySlotResponse createAvailabilitySlot(
+            List<Reservation> reservations,
+            Long studentId,
+            int hour
+    ) {
+        LocalTime startTime = LocalTime.of(hour, 0);
+        LocalTime endTime = startTime.plusHours(1);
+        Reservation overlappedReservation = findOverlappedReservation(reservations, startTime, endTime);
+
+        if (overlappedReservation == null) {
+            return ReservationAvailabilitySlotResponse.of(
+                    startTime,
+                    endTime,
+                    AvailabilitySlotStatus.AVAILABLE,
+                    null
+            );
+        }
+
+        return toReservedSlotResponse(overlappedReservation, studentId, startTime, endTime);
+    }
+
+    private ReservationAvailabilitySlotResponse toReservedSlotResponse(
+            Reservation reservation,
+            Long studentId,
+            LocalTime startTime,
+            LocalTime endTime
+    ) {
+        boolean isMyReservation = reservation.getStudent().getId().equals(studentId);
+
+        return ReservationAvailabilitySlotResponse.of(
+                startTime,
+                endTime,
+                isMyReservation ? AvailabilitySlotStatus.RESERVED_BY_ME : AvailabilitySlotStatus.RESERVED,
+                isMyReservation ? reservation.getId() : null
         );
     }
 

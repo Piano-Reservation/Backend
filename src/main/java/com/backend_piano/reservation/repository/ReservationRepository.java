@@ -11,15 +11,25 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
     List<Reservation> findByStudentAndReservationDateOrderByStartTimeAsc(Student student, LocalDate reservationDate);
 
-    List<Reservation> findByStudentAndReservationDateAndStatusInOrderByStartTimeAsc(
-            Student student,
-            LocalDate reservationDate,
-            Collection<ReservationStatus> statuses
+    @Query("""
+            select r
+            from Reservation r
+            where r.student = :student
+              and r.reservationDate = :reservationDate
+              and r.status in :statuses
+            order by r.startTime asc
+            """)
+    List<Reservation> findDailyReservationsByStudent(
+            @Param("student") Student student,
+            @Param("reservationDate") LocalDate reservationDate,
+            @Param("statuses") Collection<ReservationStatus> statuses
     );
 
     Page<Reservation> findByStudentAndReservationDateBefore(
@@ -28,13 +38,32 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             Pageable pageable
     );
 
-    List<Reservation> findByRoomAndReservationDateOrderByStartTimeAsc(Room room, LocalDate reservationDate);
+    @Query("""
+            select r
+            from Reservation r
+            where r.room = :room
+              and r.reservationDate = :reservationDate
+            order by r.startTime asc
+            """)
+    List<Reservation> findReservationsByRoomAndDate(
+            @Param("room") Room room,
+            @Param("reservationDate") LocalDate reservationDate
+    );
 
-    boolean existsByRoomAndReservationDateAndStatusInAndStartTimeLessThanAndEndTimeGreaterThan(
-            Room room,
-            LocalDate reservationDate,
-            Collection<ReservationStatus> statuses,
-            LocalTime endTime,
-            LocalTime startTime
+    @Query("""
+            select count(r) > 0
+            from Reservation r
+            where r.room = :room
+              and r.reservationDate = :reservationDate
+              and r.status in :statuses
+              and r.startTime < :endTime
+              and r.endTime > :startTime
+            """)
+    boolean existsTimeConflict(
+            @Param("room") Room room,
+            @Param("reservationDate") LocalDate reservationDate,
+            @Param("statuses") Collection<ReservationStatus> statuses,
+            @Param("startTime") LocalTime startTime,
+            @Param("endTime") LocalTime endTime
     );
 }
