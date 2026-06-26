@@ -5,6 +5,7 @@ import com.backend_piano.auth.exception.AuthErrorCode;
 import com.backend_piano.global.exception.ApiException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -47,6 +48,15 @@ public class AuthService {
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
         securityContextRepository.saveContext(context, servletRequest, servletResponse);
+        return null;
+    }
+
+    public Void logout(HttpServletRequest servletRequest) {
+        HttpSession session = servletRequest.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        SecurityContextHolder.clearContext();
         return null;
     }
 }
