@@ -38,6 +38,7 @@ public class AuthController {
                     | 202312001 | 김테스트 | FRESHMAN |
                     | 202212001 | 이테스트 | SOPHOMORE |
                     | 202112001 | 박테스트 | JUNIOR |
+                    | 202012001 | 최테스트 | SENIOR |
                     """
     )
     @ApiResponses({
