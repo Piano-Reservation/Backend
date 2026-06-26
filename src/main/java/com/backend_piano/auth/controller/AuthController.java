@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 @Tag(name = "인증")
 @RestController
@@ -51,5 +52,15 @@ public class AuthController {
             HttpServletRequest servletRequest,
             HttpServletResponse servletResponse) {
         return ApiResult.ok(authService.login(request, servletRequest, servletResponse));
+    }
+
+    @Operation(summary = "로그아웃")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "로그아웃 성공"),
+            @ApiResponse(responseCode = "401", description = "미인증")
+    })
+    @DeleteMapping
+    public ApiResult<Void> logout(HttpServletRequest servletRequest) {
+        return ApiResult.ok(authService.logout(servletRequest));
     }
 }
