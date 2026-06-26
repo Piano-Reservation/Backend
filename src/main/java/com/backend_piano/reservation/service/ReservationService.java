@@ -16,8 +16,10 @@ import com.backend_piano.room.repository.RoomAllowedCourseRepository;
 import com.backend_piano.room.repository.RoomRepository;
 import com.backend_piano.student.model.PracticeCourse;
 import com.backend_piano.student.model.Student;
+import java.time.Clock;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +54,7 @@ public class ReservationService {
     private final RoomRepository roomRepository;
     private final RoomAllowedCourseRepository roomAllowedCourseRepository;
     private final RestrictionService restrictionService;
+    private final Clock clock;
 
     public ReservationResponse createReservation(
             StudentDetails studentDetails,
@@ -104,7 +107,7 @@ public class ReservationService {
             throw new ApiException(ReservationErrorCode.RESERVATION_CANNOT_BE_CANCELLED);
         }
 
-        reservation.cancel("USER_CANCELLED", java.time.LocalDateTime.now());
+        reservation.cancel("USER_CANCELLED", LocalDateTime.now(clock));
     }
 
     private void validateRestrictedStudent(Long studentId) {
@@ -114,13 +117,13 @@ public class ReservationService {
     }
 
     private void validateReservationDate(LocalDate reservationDate) {
-        if (!LocalDate.now().isEqual(reservationDate)) {
+        if (!LocalDate.now(clock).isEqual(reservationDate)) {
             throw new ApiException(ReservationErrorCode.RESERVATION_DATE_MUST_BE_TODAY);
         }
     }
 
     private void validateReservationOpenTime() {
-        if (LocalTime.now().isBefore(RESERVATION_OPEN_TIME)) {
+        if (LocalTime.now(clock).isBefore(RESERVATION_OPEN_TIME)) {
             throw new ApiException(ReservationErrorCode.RESERVATION_NOT_OPEN_YET);
         }
     }
@@ -192,7 +195,7 @@ public class ReservationService {
         if (!isEveningReservation(startTime, endTime)) {
             return;
         }
-        if (!LocalTime.now().isBefore(MAJOR_RELEASE_TIME)) {
+        if (!LocalTime.now(clock).isBefore(MAJOR_RELEASE_TIME)) {
             return;
         }
         boolean allowed = roomAllowedCourseRepository.existsByRoomAndPracticeCourse(room, practiceCourse);

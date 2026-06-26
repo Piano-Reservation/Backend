@@ -3,6 +3,7 @@ package com.backend_piano.reservation.service;
 import com.backend_piano.auth.service.StudentDetails;
 import com.backend_piano.reservation.dto.MyReservationResponse;
 import com.backend_piano.reservation.repository.ReservationRepository;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MeReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final Clock clock;
 
     public List<MyReservationResponse> getMyReservations(StudentDetails studentDetails, LocalDate date) {
         return reservationRepository.findByStudentAndReservationDateOrderByStartTimeAsc(
@@ -39,7 +41,7 @@ public class MeReservationService {
 
         return reservationRepository.findByStudentAndReservationDateBefore(
                         studentDetails.getStudent(),
-                        LocalDate.now(),
+                        LocalDate.now(clock),
                         pageable
                 )
                 .map(MyReservationResponse::from);
