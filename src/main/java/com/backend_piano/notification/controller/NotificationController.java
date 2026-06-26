@@ -36,7 +36,13 @@ public class NotificationController {
     private final NotificationService notificationService;
     private final SseEmitterManager sseEmitterManager;
 
-    @Operation(summary = "실시간 알림 구독", description = "SSE 연결을 맺어 실시간 알림을 수신합니다.")
+    @Operation(summary = "실시간 알림 구독", description = """
+                    SSE 연결을 맺어 실시간 알림을 수신합니다.
+
+                    호출 후 응답 없이 계속 로딩 상태로 유지되는 것이 **정상**입니다.
+                    연결을 열어 둔 채로 서버가 알림을 밀어넣는 방식(Server-Sent Events)이므로,
+                    알림이 발생할 때마다 이 연결로 데이터가 실시간 전달됩니다.
+                    """)
     @ApiResponse(responseCode = "401", description = "미인증")
     @GetMapping(value = "/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter subscribe(@AuthenticationPrincipal StudentDetails studentDetails) {
