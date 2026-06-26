@@ -13,6 +13,7 @@
    - [서버 종료](#서버-종료)
    - [로그 확인](#로그-확인)
 2. [백엔드 실행 중 자주 발생하는 오류](#2-백엔드-실행-중-자주-발생하는-오류)
+   - [Cannot connect to the Docker daemon](#cannot-connect-to-the-docker-daemon--is-the-docker-daemon-running)
    - [Port 8080 already in use](#port-8080-already-in-use)
    - [Port 3306 already in use](#port-3306-already-in-use)
    - [서버가 시작됐다가 바로 꺼지는 경우](#서버가-시작됐다가-바로-꺼지는-경우)
@@ -100,6 +101,15 @@ docker-compose logs -f mysql
 ---
 
 ## 2. 백엔드 실행 중 자주 발생하는 오류
+
+### `Cannot connect to the Docker daemon` / `Is the docker daemon running?`
+
+Docker Desktop이 실행되지 않은 상태입니다.
+
+Mac 런치패드 또는 Spotlight(⌘ + Space)에서 **Docker**를 검색해 앱을 실행하세요.
+상단 메뉴바에 고래 아이콘이 뜨고 완전히 로딩된 뒤 다시 명령어를 실행하면 됩니다.
+
+---
 
 ### `Port 8080 already in use`
 
