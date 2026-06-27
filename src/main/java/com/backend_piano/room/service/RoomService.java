@@ -38,6 +38,9 @@ public class RoomService {
         List<Long> roomIds = rooms.stream()
                 .map(Room::getId)
                 .toList();
+        if (roomIds.isEmpty()) {
+            return Map.of();
+        }
 
         return roomAllowedCourseRepository.findAllowedCoursesByRoomIds(roomIds).stream()
                 .collect(java.util.stream.Collectors.groupingBy(

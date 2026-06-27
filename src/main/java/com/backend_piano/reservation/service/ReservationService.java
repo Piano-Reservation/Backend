@@ -35,7 +35,7 @@ public class ReservationService {
         Student student = studentDetails.getStudent();
         reservationCreateValidator.validateBeforeRoomLookup(student, request);
 
-        Room room = roomRepository.findByIdAndActiveTrue(request.roomId())
+        Room room = roomRepository.findByIdAndActiveTrueForUpdate(request.roomId())
                 .orElseThrow(() -> new ApiException(RoomErrorCode.ROOM_NOT_FOUND));
 
         reservationCreateValidator.validateAfterRoomLookup(student, room, request);

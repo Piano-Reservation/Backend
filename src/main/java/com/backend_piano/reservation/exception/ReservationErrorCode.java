@@ -20,6 +20,7 @@ public enum ReservationErrorCode implements BaseErrorCode {
     EVENING_ROOM_MAJOR_RESTRICTION(6011, "18시 이후 3층 예약은 지정된 전공실기 연습실만 예약할 수 있습니다.", HttpStatus.BAD_REQUEST),
     RESERVATION_ACCESS_DENIED(6012, "해당 예약에 접근할 권한이 없습니다.", HttpStatus.FORBIDDEN),
     RESERVATION_CANNOT_BE_CANCELLED(6013, "현재 상태의 예약은 취소할 수 없습니다.", HttpStatus.BAD_REQUEST),
+    RESERVATION_TIME_ALREADY_PASSED(6014, "이미 지난 시간대는 예약할 수 없습니다.", HttpStatus.BAD_REQUEST),
 
     ;
 

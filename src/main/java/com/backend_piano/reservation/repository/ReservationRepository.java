@@ -43,11 +43,13 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             from Reservation r
             where r.room = :room
               and r.reservationDate = :reservationDate
+              and r.status in :statuses
             order by r.startTime asc
             """)
-    List<Reservation> findReservationsByRoomAndDate(
+    List<Reservation> findActiveReservationsByRoomAndDate(
             @Param("room") Room room,
-            @Param("reservationDate") LocalDate reservationDate
+            @Param("reservationDate") LocalDate reservationDate,
+            @Param("statuses") Collection<ReservationStatus> statuses
     );
 
     @Query("""

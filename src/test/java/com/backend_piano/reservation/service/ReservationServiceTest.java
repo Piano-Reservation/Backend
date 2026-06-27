@@ -95,7 +95,7 @@ class ReservationServiceTest {
         );
 
         when(restrictionService.hasCurrentRestriction(student.getId())).thenReturn(false);
-        when(roomRepository.findByIdAndActiveTrue(room.getId())).thenReturn(Optional.of(room));
+        when(roomRepository.findByIdAndActiveTrueForUpdate(room.getId())).thenReturn(Optional.of(room));
         when(reservationRepository.findDailyReservationsByStudent(
                 eq(student), eq(request.date()), any())).thenReturn(List.of());
         when(reservationRepository.existsTimeConflict(
@@ -137,7 +137,28 @@ class ReservationServiceTest {
                 .extracting("errorCode")
                 .isEqualTo(ReservationErrorCode.RESERVATION_DATE_MUST_BE_TODAY);
 
-        verify(roomRepository, never()).findByIdAndActiveTrue(any());
+        verify(roomRepository, never()).findByIdAndActiveTrueForUpdate(any());
+    }
+
+    @Test
+    void 이미_지난_시간대는_예약할_수_없다() {
+        Student student = createStudent(1L, PracticeCourse.PRACTICE_3);
+        StudentDetails studentDetails = new StudentDetails(student);
+        ReservationCreateRequest request = new ReservationCreateRequest(
+                2L,
+                LocalDate.now(clock),
+                LocalTime.of(9, 0),
+                LocalTime.of(10, 0)
+        );
+
+        when(restrictionService.hasCurrentRestriction(student.getId())).thenReturn(false);
+
+        assertThatThrownBy(() -> reservationService.createReservation(studentDetails, request))
+                .isInstanceOf(ApiException.class)
+                .extracting("errorCode")
+                .isEqualTo(ReservationErrorCode.RESERVATION_TIME_ALREADY_PASSED);
+
+        verify(roomRepository, never()).findByIdAndActiveTrueForUpdate(any());
     }
 
     @Test
@@ -156,7 +177,7 @@ class ReservationServiceTest {
         Reservation existing2 = createReservation(11L, student, room, request.date(), LocalTime.of(11, 0), LocalTime.of(13, 0), ReservationStatus.COMPLETED);
 
         when(restrictionService.hasCurrentRestriction(student.getId())).thenReturn(false);
-        when(roomRepository.findByIdAndActiveTrue(room.getId())).thenReturn(Optional.of(room));
+        when(roomRepository.findByIdAndActiveTrueForUpdate(room.getId())).thenReturn(Optional.of(room));
         when(reservationRepository.findDailyReservationsByStudent(
                 eq(student), eq(request.date()), any())).thenReturn(List.of(existing1, existing2));
 
@@ -179,7 +200,7 @@ class ReservationServiceTest {
         );
 
         when(restrictionService.hasCurrentRestriction(student.getId())).thenReturn(false);
-        when(roomRepository.findByIdAndActiveTrue(room.getId())).thenReturn(Optional.of(room));
+        when(roomRepository.findByIdAndActiveTrueForUpdate(room.getId())).thenReturn(Optional.of(room));
         when(reservationRepository.findDailyReservationsByStudent(
                 eq(student), eq(request.date()), any())).thenReturn(List.of());
         when(roomAllowedCourseRepository.isPracticeCourseAllowed(room, student.getPracticeCourse())).thenReturn(false);

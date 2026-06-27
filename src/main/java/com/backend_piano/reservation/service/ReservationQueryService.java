@@ -24,6 +24,10 @@ public class ReservationQueryService {
 
     private static final int FIRST_SLOT_HOUR = 9;
     private static final int LAST_SLOT_HOUR = 23;
+    private static final List<com.backend_piano.reservation.model.ReservationStatus> OCCUPIED_STATUSES = List.of(
+            com.backend_piano.reservation.model.ReservationStatus.RESERVED,
+            com.backend_piano.reservation.model.ReservationStatus.CHECKED_IN
+    );
 
     private final RoomRepository roomRepository;
     private final ReservationRepository reservationRepository;
@@ -36,7 +40,11 @@ public class ReservationQueryService {
         Room room = roomRepository.findByIdAndActiveTrue(roomId)
                 .orElseThrow(() -> new ApiException(RoomErrorCode.ROOM_NOT_FOUND));
 
-        List<Reservation> reservations = reservationRepository.findReservationsByRoomAndDate(room, date);
+        List<Reservation> reservations = reservationRepository.findActiveReservationsByRoomAndDate(
+                room,
+                date,
+                OCCUPIED_STATUSES
+        );
         List<ReservationAvailabilitySlotResponse> slots = createAvailabilitySlots(reservations, studentDetails.getStudent().getId());
 
         return ReservationAvailabilityResponse.of(

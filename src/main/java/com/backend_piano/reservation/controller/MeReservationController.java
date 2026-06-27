@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;
 import java.util.List;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -44,8 +46,8 @@ public class MeReservationController {
     @GetMapping("/history")
     public ApiResult<Page<MyReservationResponse>> getMyReservationHistory(
             @AuthenticationPrincipal StudentDetails studentDetails,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
+            @RequestParam(defaultValue = "0") @Min(0) int page,
+            @RequestParam(defaultValue = "20") @Min(1) @Max(value = 100, message = "페이지 사이즈는 최대 100까지 허용합니다.") int size) {
         return ApiResult.ok(meReservationService.getMyReservationHistory(studentDetails, page, size));
     }
 }

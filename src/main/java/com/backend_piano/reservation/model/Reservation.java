@@ -27,9 +27,9 @@ import lombok.NoArgsConstructor;
         name = "reservations",
         indexes = {
                 @Index(name = "idx_reservations_student_id", columnList = "student_id"),
-                @Index(name = "idx_reservations_room_date", columnList = "room_id, reservationDate"),
-                @Index(name = "idx_reservations_student_date", columnList = "student_id, reservationDate"),
-                @Index(name = "idx_reservations_date_status", columnList = "reservationDate, status")
+                @Index(name = "idx_reservations_room_date", columnList = "room_id, reservation_date"),
+                @Index(name = "idx_reservations_student_date", columnList = "student_id, reservation_date"),
+                @Index(name = "idx_reservations_date_status", columnList = "reservation_date, status")
         }
 )
 @Getter

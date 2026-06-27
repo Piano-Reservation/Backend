@@ -23,8 +23,8 @@ import lombok.NoArgsConstructor;
         name = "room_allowed_courses",
         indexes = {
                 @Index(name = "idx_room_allowed_courses_room_id", columnList = "room_id"),
-                @Index(name = "idx_room_allowed_courses_course", columnList = "practiceCourse"),
-                @Index(name = "uk_room_allowed_courses_room_course", columnList = "room_id, practiceCourse", unique = true)
+                @Index(name = "idx_room_allowed_courses_course", columnList = "practice_course"),
+                @Index(name = "uk_room_allowed_courses_room_course", columnList = "room_id, practice_course", unique = true)
         }
 )
 @Getter

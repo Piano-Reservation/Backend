@@ -50,6 +50,7 @@ public class ReservationCreateValidator {
         validateReservationDate(request.date());
         validateReservationOpenTime();
         validateReservationTimeRange(request.startTime(), request.endTime());
+        validateReservationNotInPast(request.date(), request.startTime());
     }
 
     public void validateAfterRoomLookup(Student student, Room room, ReservationCreateRequest request) {
@@ -89,6 +90,12 @@ public class ReservationCreateValidator {
         }
         if (Duration.between(startTime, endTime).toMinutes() > MAX_RESERVATION_MINUTES) {
             throw new ApiException(ReservationErrorCode.RESERVATION_EXCEEDS_MAX_DURATION);
+        }
+    }
+
+    private void validateReservationNotInPast(LocalDate reservationDate, LocalTime startTime) {
+        if (reservationDate.isEqual(today()) && startTime.isBefore(currentTime())) {
+            throw new ApiException(ReservationErrorCode.RESERVATION_TIME_ALREADY_PASSED);
         }
     }
 
