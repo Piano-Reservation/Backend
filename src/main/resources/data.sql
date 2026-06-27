@@ -13,7 +13,13 @@ VALUES
     (4, 'THIRD', '303', '예술체육대학2-303호', true, NOW(), NOW()),
     (5, 'THIRD', '304', '예술체육대학2-304호', true, NOW(), NOW()),
     (6, 'THIRD', '310', '예술체육대학2-310호', true, NOW(), NOW()),
-    (7, 'THIRD', '311', '예술체육대학2-311호', true, NOW(), NOW());
+    (7, 'THIRD', '311', '예술체육대학2-311호', true, NOW(), NOW()),
+    (8, 'BASEMENT', 'B115', '예술체육대학2-B115호', true, NOW(), NOW()),
+    (9, 'BASEMENT', 'B116', '예술체육대학2-B116호', true, NOW(), NOW()),
+    (10, 'BASEMENT', 'B117', '예술체육대학2-B117호', true, NOW(), NOW()),
+    (11, 'BASEMENT', 'B118', '예술체육대학2-B118호', true, NOW(), NOW()),
+    (12, 'BASEMENT', 'B119', '예술체육대학2-B119호', true, NOW(), NOW()),
+    (13, 'BASEMENT', 'B120', '예술체육대학2-B120호', true, NOW(), NOW());
 
 INSERT INTO room_allowed_courses (room_id, practice_course, created_at, updated_at)
 VALUES
