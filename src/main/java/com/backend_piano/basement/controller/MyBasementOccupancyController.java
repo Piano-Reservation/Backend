@@ -2,7 +2,7 @@ package com.backend_piano.basement.controller;
 
 import com.backend_piano.auth.service.StudentDetails;
 import com.backend_piano.basement.dto.BasementOccupancyResponse;
-import com.backend_piano.basement.service.MeBasementOccupancyService;
+import com.backend_piano.basement.service.MyBasementOccupancyService;
 import com.backend_piano.global.dto.ApiResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -18,15 +18,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/me/basement/occupancies")
 @RequiredArgsConstructor
-public class MeBasementOccupancyController {
+public class MyBasementOccupancyController {
 
-    private final MeBasementOccupancyService meBasementOccupancyService;
+    private final MyBasementOccupancyService myBasementOccupancyService;
 
     @Operation(summary = "내 지하 연습실 입실 기록 조회")
     @ApiResponse(responseCode = "401", description = "미인증")
     @GetMapping
     public ApiResult<List<BasementOccupancyResponse>> getMyOccupancies(
             @AuthenticationPrincipal StudentDetails studentDetails) {
-        return ApiResult.ok(meBasementOccupancyService.getMyOccupancies(studentDetails));
+        return ApiResult.ok(myBasementOccupancyService.getMyOccupancies(studentDetails));
     }
 }
