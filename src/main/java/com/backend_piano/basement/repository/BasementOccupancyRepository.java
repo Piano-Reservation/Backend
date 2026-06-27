@@ -19,6 +19,10 @@ public interface BasementOccupancyRepository extends JpaRepository<BasementOccup
 
     List<BasementOccupancy> findByStudentOrderByEnteredAtDesc(Student student);
 
+    boolean existsByRoomAndStatus(Room room, BasementOccupancyStatus status);
+
+    boolean existsByStudentAndStatus(Student student, BasementOccupancyStatus status);
+
     @Query("""
             select bo
             from BasementOccupancy bo
