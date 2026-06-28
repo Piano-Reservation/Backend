@@ -16,6 +16,8 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 
     Optional<Room> findByIdAndActiveTrue(Long id);
 
+    Optional<Room> findByQrTokenAndActiveTrue(String qrToken);
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""
             select r
