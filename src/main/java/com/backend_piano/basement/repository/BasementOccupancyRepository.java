@@ -7,7 +7,9 @@ import com.backend_piano.room.model.Room;
 import com.backend_piano.student.model.Student;
 import java.util.List;
 import java.util.Optional;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -22,6 +24,14 @@ public interface BasementOccupancyRepository extends JpaRepository<BasementOccup
     boolean existsByRoomAndStatus(Room room, BasementOccupancyStatus status);
 
     boolean existsByStudentAndStatus(Student student, BasementOccupancyStatus status);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("""
+            select bo
+            from BasementOccupancy bo
+            where bo.id = :occupancyId
+            """)
+    Optional<BasementOccupancy> findByIdForUpdate(@Param("occupancyId") Long occupancyId);
 
     @Query("""
             select bo

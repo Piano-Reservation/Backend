@@ -55,7 +55,7 @@ public class BasementOccupancyService {
     }
 
     public BasementOccupancyResponse exitOccupancy(StudentDetails studentDetails, Long occupancyId) {
-        BasementOccupancy occupancy = basementOccupancyRepository.findById(occupancyId)
+        BasementOccupancy occupancy = basementOccupancyRepository.findByIdForUpdate(occupancyId)
                 .orElseThrow(() -> new ApiException(BasementOccupancyErrorCode.BASEMENT_OCCUPANCY_NOT_FOUND));
 
         if (!occupancy.getStudent().getId().equals(studentDetails.getStudent().getId())) {

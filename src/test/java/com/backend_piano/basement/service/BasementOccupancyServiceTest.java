@@ -168,7 +168,7 @@ class BasementOccupancyServiceTest {
                 BasementOccupancyStatus.IN_USE
         );
 
-        when(basementOccupancyRepository.findById(41L)).thenReturn(Optional.of(occupancy));
+        when(basementOccupancyRepository.findByIdForUpdate(41L)).thenReturn(Optional.of(occupancy));
 
         BasementOccupancyResponse response = basementOccupancyService.exitOccupancy(studentDetails, 41L);
 
@@ -189,7 +189,7 @@ class BasementOccupancyServiceTest {
                 BasementOccupancyStatus.EXITED
         );
 
-        when(basementOccupancyRepository.findById(42L)).thenReturn(Optional.of(occupancy));
+        when(basementOccupancyRepository.findByIdForUpdate(42L)).thenReturn(Optional.of(occupancy));
 
         assertThatThrownBy(() -> basementOccupancyService.exitOccupancy(studentDetails, 42L))
                 .isInstanceOf(ApiException.class)
@@ -211,7 +211,7 @@ class BasementOccupancyServiceTest {
                 BasementOccupancyStatus.IN_USE
         );
 
-        when(basementOccupancyRepository.findById(43L)).thenReturn(Optional.of(occupancy));
+        when(basementOccupancyRepository.findByIdForUpdate(43L)).thenReturn(Optional.of(occupancy));
 
         assertThatThrownBy(() -> basementOccupancyService.exitOccupancy(studentDetails, 43L))
                 .isInstanceOf(ApiException.class)
