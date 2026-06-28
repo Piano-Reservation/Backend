@@ -60,6 +60,9 @@ public class Room extends BaseEntity {
         if (Objects.nonNull(qrToken) && qrToken.isBlank()) {
             throw new IllegalArgumentException("QR 토큰은 공백일 수 없습니다.");
         }
+        if (Objects.nonNull(qrToken) && qrToken.length() > 100) {
+            throw new IllegalArgumentException("QR 토큰은 100자를 초과할 수 없습니다.");
+        }
         this.qrToken = qrToken;
     }
 
