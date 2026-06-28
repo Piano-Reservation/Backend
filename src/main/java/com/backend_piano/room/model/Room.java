@@ -40,6 +40,9 @@ public class Room extends BaseEntity {
     @Column(nullable = false, length = 100)
     private String name;
 
+    @Column(unique = true, length = 100)
+    private String qrToken;
+
     @Column(nullable = false)
     private boolean active;
 
@@ -50,6 +53,10 @@ public class Room extends BaseEntity {
         room.name = name;
         room.active = true;
         return room;
+    }
+
+    public void assignQrToken(String qrToken) {
+        this.qrToken = qrToken;
     }
 
     public void deactivate() {
