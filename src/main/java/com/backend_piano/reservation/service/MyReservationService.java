@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class MeReservationService {
+public class MyReservationService {
 
     private final ReservationRepository reservationRepository;
     private final Clock clock;
