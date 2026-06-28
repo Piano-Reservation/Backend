@@ -99,6 +99,8 @@ class BasementOccupancyServiceTest {
         verify(basementOccupancyRepository).save(captor.capture());
         assertThat(captor.getValue().getStudent()).isEqualTo(student);
         assertThat(captor.getValue().getRoom()).isEqualTo(room);
+        assertThat(ReflectionTestUtils.getField(captor.getValue(), "activeStudentId")).isEqualTo(student.getId());
+        assertThat(ReflectionTestUtils.getField(captor.getValue(), "activeRoomId")).isEqualTo(room.getId());
     }
 
     @Test
@@ -174,6 +176,8 @@ class BasementOccupancyServiceTest {
 
         assertThat(response.status()).isEqualTo(BasementOccupancyStatus.EXITED);
         assertThat(response.exitedAt()).isEqualTo(LocalDateTime.now(clock));
+        assertThat(ReflectionTestUtils.getField(occupancy, "activeStudentId")).isNull();
+        assertThat(ReflectionTestUtils.getField(occupancy, "activeRoomId")).isNull();
     }
 
     @Test
