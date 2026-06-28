@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -56,6 +57,9 @@ public class Room extends BaseEntity {
     }
 
     public void assignQrToken(String qrToken) {
+        if (Objects.nonNull(qrToken) && qrToken.isBlank()) {
+            throw new IllegalArgumentException("QR 토큰은 공백일 수 없습니다.");
+        }
         this.qrToken = qrToken;
     }
 
