@@ -3,7 +3,17 @@ VALUES
     ('202312001', '김테스트', '$2y$10$pS2MvZ9sstTuOfb3E7u5keoVHLev6CcVyvabcVn964IHKTWZ81CAi', '2005-03-15', 'FRESHMAN',  'PRACTICE_1', 'ACTIVE', NOW(), NOW()),
     ('202212001', '이테스트', '$2y$10$w1QzsL6nDe5KGU8/9V6LTurmKSlOT336s4cUfQOyxCkyWq9vMnZya', '2004-07-22', 'SOPHOMORE', 'PRACTICE_2', 'ACTIVE', NOW(), NOW()),
     ('202112001', '박테스트', '$2y$10$Vy9kMt0eCan8sjxf2huoVOfBKEK3AsuKJec/OcaDTL7gtPuZJL0c6', '2003-11-08', 'JUNIOR',    'PRACTICE_3', 'ACTIVE', NOW(), NOW()),
-    ('202012001', '최테스트', '$2y$10$pS2MvZ9sstTuOfb3E7u5keoVHLev6CcVyvabcVn964IHKTWZ81CAi', '2002-05-20', 'SENIOR',    'PRACTICE_7', 'ACTIVE', NOW(), NOW());
+    ('202012001', '최테스트', '$2y$10$pS2MvZ9sstTuOfb3E7u5keoVHLev6CcVyvabcVn964IHKTWZ81CAi', '2002-05-20', 'SENIOR',    'PRACTICE_7', 'ACTIVE', NOW(), NOW()),
+    ('202512001', '제한테스트', '$2y$10$pS2MvZ9sstTuOfb3E7u5keoVHLev6CcVyvabcVn964IHKTWZ81CAi', '2006-03-01', 'FRESHMAN',  'PRACTICE_1', 'ACTIVE', NOW(), NOW());
+
+INSERT INTO restrictions (student_id, start_date, end_date, reason, created_at, updated_at)
+VALUES (
+    (SELECT id FROM students WHERE student_number = '202512001'),
+    '2026-01-01',
+    '2026-12-31',
+    '이용 제한 테스트 계정'
+    , NOW(), NOW()
+);
 
 INSERT INTO rooms (id, floor, code, name, active, created_at, updated_at)
 VALUES
