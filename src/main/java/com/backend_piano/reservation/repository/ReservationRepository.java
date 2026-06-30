@@ -8,9 +8,12 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -67,5 +70,24 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             @Param("statuses") Collection<ReservationStatus> statuses,
             @Param("startTime") LocalTime startTime,
             @Param("endTime") LocalTime endTime
+    );
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("""
+            select r
+            from Reservation r
+            where r.student = :student
+              and r.room = :room
+              and r.reservationDate = :reservationDate
+              and r.status in :statuses
+              and r.startTime <= :currentTime
+              and r.endTime > :currentTime
+            """)
+    Optional<Reservation> findCheckInTargetReservationForUpdate(
+            @Param("student") Student student,
+            @Param("room") Room room,
+            @Param("reservationDate") LocalDate reservationDate,
+            @Param("currentTime") LocalTime currentTime,
+            @Param("statuses") Collection<ReservationStatus> statuses
     );
 }

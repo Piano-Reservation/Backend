@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,6 +41,9 @@ public class Room extends BaseEntity {
     @Column(nullable = false, length = 100)
     private String name;
 
+    @Column(unique = true, length = 100)
+    private String qrToken;
+
     @Column(nullable = false)
     private boolean active;
 
@@ -50,6 +54,16 @@ public class Room extends BaseEntity {
         room.name = name;
         room.active = true;
         return room;
+    }
+
+    public void assignQrToken(String qrToken) {
+        if (Objects.nonNull(qrToken) && qrToken.isBlank()) {
+            throw new IllegalArgumentException("QR 토큰은 공백일 수 없습니다.");
+        }
+        if (Objects.nonNull(qrToken) && qrToken.length() > 100) {
+            throw new IllegalArgumentException("QR 토큰은 100자를 초과할 수 없습니다.");
+        }
+        this.qrToken = qrToken;
     }
 
     public void deactivate() {
