@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -89,5 +90,22 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             @Param("reservationDate") LocalDate reservationDate,
             @Param("currentTime") LocalTime currentTime,
             @Param("statuses") Collection<ReservationStatus> statuses
+    );
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("""
+            update Reservation r
+            set r.status = :completedStatus
+            where r.status = :checkedInStatus
+              and (
+                    r.reservationDate < :today
+                    or (r.reservationDate = :today and r.endTime <= :currentTime)
+                  )
+            """)
+    int completeExpiredCheckedInReservations(
+            @Param("checkedInStatus") ReservationStatus checkedInStatus,
+            @Param("completedStatus") ReservationStatus completedStatus,
+            @Param("today") LocalDate today,
+            @Param("currentTime") LocalTime currentTime
     );
 }
