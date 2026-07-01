@@ -41,6 +41,7 @@ public class AuthController {
                     | 202112001 | 박테스트 | JUNIOR | |
                     | 202012001 | 최테스트 | SENIOR | |
                     | 202512001 | 제한테스트 | FRESHMAN | 이용제한 계정 |
+                    | 202412001 | 이용기록테스트 | SOPHOMORE | 2026-06-30 이용기록(COMPLETED) 보유 |
                     """
     )
     @ApiResponses({

@@ -4,7 +4,8 @@ VALUES
     ('202212001', '이테스트', '$2y$10$w1QzsL6nDe5KGU8/9V6LTurmKSlOT336s4cUfQOyxCkyWq9vMnZya', '2004-07-22', 'SOPHOMORE', 'PRACTICE_2', 'ACTIVE', NOW(), NOW()),
     ('202112001', '박테스트', '$2y$10$Vy9kMt0eCan8sjxf2huoVOfBKEK3AsuKJec/OcaDTL7gtPuZJL0c6', '2003-11-08', 'JUNIOR',    'PRACTICE_3', 'ACTIVE', NOW(), NOW()),
     ('202012001', '최테스트', '$2y$10$pS2MvZ9sstTuOfb3E7u5keoVHLev6CcVyvabcVn964IHKTWZ81CAi', '2002-05-20', 'SENIOR',    'PRACTICE_7', 'ACTIVE', NOW(), NOW()),
-    ('202512001', '제한테스트', '$2y$10$pS2MvZ9sstTuOfb3E7u5keoVHLev6CcVyvabcVn964IHKTWZ81CAi', '2006-03-01', 'FRESHMAN',  'PRACTICE_1', 'ACTIVE', NOW(), NOW());
+    ('202512001', '제한테스트', '$2y$10$pS2MvZ9sstTuOfb3E7u5keoVHLev6CcVyvabcVn964IHKTWZ81CAi', '2006-03-01', 'FRESHMAN',  'PRACTICE_1', 'ACTIVE', NOW(), NOW()),
+    ('202412001', '이용기록테스트', '$2y$10$pS2MvZ9sstTuOfb3E7u5keoVHLev6CcVyvabcVn964IHKTWZ81CAi', '2005-09-10', 'SOPHOMORE', 'PRACTICE_1', 'ACTIVE', NOW(), NOW());
 
 INSERT INTO restrictions (student_id, start_date, end_date, reason, created_at, updated_at)
 VALUES (
@@ -43,3 +44,28 @@ VALUES
     (6, 'PRACTICE_8', NOW(), NOW()),
     (7, 'PRACTICE_7', NOW(), NOW()),
     (7, 'PRACTICE_8', NOW(), NOW());
+
+INSERT INTO reservations (student_id, room_id, reservation_date, start_time, end_time, status, checked_in_at, created_at, updated_at)
+VALUES (
+    (SELECT id FROM students WHERE student_number = '202412001'),
+    1,
+    '2026-06-30',
+    '14:00:00',
+    '16:00:00',
+    'COMPLETED',
+    '2026-06-30 14:02:00',
+    NOW(),
+    NOW()
+);
+
+INSERT INTO check_ins (student_id, reservation_id, room_id, checked_in_at, created_at, updated_at)
+VALUES (
+    (SELECT id FROM students WHERE student_number = '202412001'),
+    (SELECT id FROM reservations
+        WHERE student_id = (SELECT id FROM students WHERE student_number = '202412001')
+          AND reservation_date = '2026-06-30'),
+    1,
+    '2026-06-30 14:02:00',
+    NOW(),
+    NOW()
+);
