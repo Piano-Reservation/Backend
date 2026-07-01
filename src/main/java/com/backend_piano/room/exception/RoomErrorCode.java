@@ -9,6 +9,7 @@ public enum RoomErrorCode implements BaseErrorCode {
 
     ROOM_NOT_FOUND(5001, "연습실 정보를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     INVALID_ROOM_FLOOR(5002, "지원하지 않는 층 정보입니다.", HttpStatus.BAD_REQUEST),
+    SCHEDULE_NOT_SUPPORTED_FLOOR(5003, "시간표 조회는 1층과 3층만 지원합니다.", HttpStatus.BAD_REQUEST),
 
     ;
 

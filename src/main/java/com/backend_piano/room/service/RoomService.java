@@ -1,6 +1,8 @@
 package com.backend_piano.room.service;
 
+import com.backend_piano.global.exception.ApiException;
 import com.backend_piano.room.dto.RoomResponse;
+import com.backend_piano.room.exception.RoomErrorCode;
 import com.backend_piano.room.model.Room;
 import com.backend_piano.room.model.RoomAllowedCourse;
 import com.backend_piano.room.model.RoomFloor;
@@ -20,6 +22,17 @@ public class RoomService {
 
     private final RoomRepository roomRepository;
     private final RoomAllowedCourseRepository roomAllowedCourseRepository;
+
+    public RoomResponse getRoom(Long roomId) {
+        Room room = roomRepository.findByIdAndActiveTrue(roomId)
+                .orElseThrow(() -> new ApiException(RoomErrorCode.ROOM_NOT_FOUND));
+        List<Integer> majorPracticeTargets = roomAllowedCourseRepository
+                .findAllowedCoursesByRoomIds(List.of(roomId)).stream()
+                .map(this::toPracticeCourseNumber)
+                .sorted()
+                .toList();
+        return RoomResponse.of(room, majorPracticeTargets);
+    }
 
     public List<RoomResponse> getRooms(int floorLevel) {
         RoomFloor floor = RoomFloor.fromLevel(floorLevel);
