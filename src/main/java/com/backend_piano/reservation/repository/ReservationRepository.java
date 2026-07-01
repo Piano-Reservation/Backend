@@ -3,6 +3,7 @@ package com.backend_piano.reservation.repository;
 import com.backend_piano.reservation.model.Reservation;
 import com.backend_piano.reservation.model.ReservationStatus;
 import com.backend_piano.room.model.Room;
+import com.backend_piano.room.model.RoomFloor;
 import com.backend_piano.student.model.Student;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -97,6 +98,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             update Reservation r
             set r.status = :completedStatus
             where r.status = :checkedInStatus
+              and r.room.floor in :floors
               and (
                     r.reservationDate < :today
                     or (r.reservationDate = :today and r.endTime <= :currentTime)
@@ -105,6 +107,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     int completeExpiredCheckedInReservations(
             @Param("checkedInStatus") ReservationStatus checkedInStatus,
             @Param("completedStatus") ReservationStatus completedStatus,
+            @Param("floors") Collection<RoomFloor> floors,
             @Param("today") LocalDate today,
             @Param("currentTime") LocalTime currentTime
     );

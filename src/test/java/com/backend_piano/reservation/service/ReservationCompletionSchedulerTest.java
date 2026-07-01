@@ -4,10 +4,12 @@ import static org.mockito.Mockito.verify;
 
 import com.backend_piano.reservation.model.ReservationStatus;
 import com.backend_piano.reservation.repository.ReservationRepository;
+import com.backend_piano.room.model.RoomFloor;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.time.ZoneId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,6 +42,7 @@ class ReservationCompletionSchedulerTest {
         verify(reservationRepository).completeExpiredCheckedInReservations(
                 ReservationStatus.CHECKED_IN,
                 ReservationStatus.COMPLETED,
+                List.of(RoomFloor.FIRST, RoomFloor.THIRD),
                 LocalDate.now(clock),
                 LocalTime.now(clock)
         );

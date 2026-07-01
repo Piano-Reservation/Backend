@@ -46,6 +46,11 @@ class ReservationRepositoryTest {
                 "399",
                 "예술체육대학2-399호"
         ));
+        Room basementRoom = roomRepository.save(Room.create(
+                RoomFloor.BASEMENT,
+                "B399",
+                "예술체육대학2-B399호"
+        ));
 
         Reservation expiredCheckedIn = reservationRepository.save(createReservation(
                 student,
@@ -79,10 +84,19 @@ class ReservationRepositoryTest {
                 LocalTime.of(14, 0),
                 ReservationStatus.CANCELLED
         ));
+        Reservation basementCheckedIn = reservationRepository.save(createReservation(
+                student,
+                basementRoom,
+                LocalDate.of(2026, 7, 1),
+                LocalTime.of(12, 0),
+                LocalTime.of(13, 0),
+                ReservationStatus.CHECKED_IN
+        ));
 
         int updatedCount = reservationRepository.completeExpiredCheckedInReservations(
                 ReservationStatus.CHECKED_IN,
                 ReservationStatus.COMPLETED,
+                java.util.List.of(RoomFloor.FIRST, RoomFloor.THIRD),
                 LocalDate.of(2026, 7, 1),
                 LocalTime.of(16, 30)
         );
@@ -96,6 +110,8 @@ class ReservationRepositoryTest {
                 .isEqualTo(ReservationStatus.RESERVED);
         assertThat(reservationRepository.findById(cancelled.getId()).orElseThrow().getStatus())
                 .isEqualTo(ReservationStatus.CANCELLED);
+        assertThat(reservationRepository.findById(basementCheckedIn.getId()).orElseThrow().getStatus())
+                .isEqualTo(ReservationStatus.CHECKED_IN);
     }
 
     private Reservation createReservation(
